@@ -14,12 +14,22 @@ struct FindFiles_t : FindFiles_t_, WIN32_FIND_DATAU
 	cstr getPath() { return fName.left(pathLen); }
 
 	FindFiles_t(cch*);
-	 int down(); 
-	void up(int len) { pathLen = len; }
-	
 	
 	int first(HANDLE&);
 	int next(HANDLE); int next(int);
+	
+	void cat(cstr name) { fName.slen 
+		= pathLen; fName.pathcat(name); }
+	void cat(cch* name) { fName.slen 
+		= pathLen; fName.pathcat(name); }
+	
+	
+	#define FIND_FILES_LOOP(ff, ...) int ret; \
+		{ HANDLE hFind; SCOPE_EXIT(FindClose(hFind)); \
+		for(ret = (ff).first(hFind); ret < 0; \
+			ret = (ff).next(hFind)) { __VA_ARGS__ }}
+	#define FIND_FILES_ENTER(ff) SCOPE_REF( \
+		int, oldPathLen, (ff).pathLen);
 };
 
 
