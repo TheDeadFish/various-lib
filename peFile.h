@@ -63,9 +63,9 @@ struct PeFile
 		char name[9]; 
 		
 		
-		DWORD endRva() { return baseRva+size; }
+		DWORD endRva() { return baseRva+size(); }
 		DWORD endPage() { return baseRva+allocSize; }
-		DataDir dataDir() { return {baseRva,size}; }
+		DataDir dataDir() { return {baseRva,size()}; }
 		Void rvaPtr(u32 rva) { return data+(rva-baseRva); }
 		u32 ptrRva(void* p) { return PTRDIFF(p,data)+baseRva; }
 		u32 extent(PeFile& peFile);
