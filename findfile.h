@@ -40,6 +40,7 @@ struct FindFiles_t : FindFiles_t_, WIN32_FIND_DATAU
 
 size_t findFiles(cch* name, int flags, void* ctx,
 	size_t (__stdcall *cb)(int, FindFiles_t&));
-enum { FF_ERR_OK = 1, FF_ERR_CB = 2, FF_DIR_CB = 4 };
+enum { FF_ERR_OK = 1, FF_ERR_CB = 2, FF_DIR_CB = 4,
+	FF_DIR_AFT = 8 };
 
 #endif

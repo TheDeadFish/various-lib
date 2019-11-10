@@ -35,16 +35,27 @@ struct FindFile_x : FindFile_x_, FindFiles_t {
 	
 size_t FindFile_x::doFind()
 {
+	xArray<xstr> dirLst;
+
+
 	FIND_FILES_ENTER(*this);
 
 	FIND_FILES_LOOP(*this, 
 		if(!isDir() || (flags & 4)) IFRET(cb(0, *this));
-		if(isDir()) { IFRET(doFind()); } )
+		if(isDir()) { 
+			if(!(flags & FF_DIR_AFT)){IFRET(doFind());}
+			else dirLst.push_back(getName().xdup());
+		});
 	
 	// handle error
 	if(ret > 0) { if(flags & 2) { fName.slen = pathLen; 	
 		IFRET(cb(ret, *this)); } else { if((ret > 2) 
 		||(!(flags & 1))) return ret; errCode = 2; }}
+		
+		
+	// directory loop
+	for(auto& dir : dirLst) {
+		cat(dir); IFRET(doFind()); }
 	return 0;
 }
 
