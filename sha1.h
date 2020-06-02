@@ -17,6 +17,12 @@ struct Sha1
 	void merge(Sha1& That);
 	void toHexString(char* hexstring) const;
 	void toHexString(wchar_t* hexstring) const;
+	
+	const char* parse(const char* hexstring);
+	
+	unsigned& operator[](int i) { return hash[i]; }
+	
+	
 
 	// comparison functions
 	bool operator==(const Sha1& That) const;

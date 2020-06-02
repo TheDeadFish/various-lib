@@ -202,6 +202,28 @@ void Sha1::toHexString(wchar_t* hexstring) const
 	*hexstring = '\0';
 }
 
+static 
+int hex_char(unsigned ch)
+{
+	u32 x = ch-'0'; if(x < 10) return x;
+	x = (ch|0x20)-'a'; if(x < 6) return x+10;
+	return -1;
+}
+
+#define HEX_CHAR(ch, ...) ({ u32 y = ch; VARFIX(y); \
+	u32 x = y-'0'; if(x >= 10) { x = (y|0x20)-'a'; \
+	if(x > 5){ __VA_ARGS__; } x+=10; } x; })
+
+const char* Sha1::parse(const char* str)
+{
+	for(byte& ch : *((ARRAY_B20)&hash)) {
+		ch = (HEX_CHAR(str[0], return 0)<<4)
+			| HEX_CHAR(str[1], return 0); 
+		str += 2; 
+	}
+
+	return str;
+}
 
 void Sha1::merge(Sha1& That)
 {
